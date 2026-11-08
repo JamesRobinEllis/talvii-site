@@ -5,8 +5,9 @@
   --text: #1A1D21;
   --muted: #5C6370;
   --empty: #E7E5DF;
-  --accent: #2F9E6B;
-  --button: #1F7A52; /* darker than the accent so white text passes 4.5:1 */
+  --accent: #8B6CF0; /* focus rings */
+  --button: #A78BFA; /* Talvii lavender, with dark text (about 8:1 contrast) */
+  --button-ink: #15121C;
   --error: #B42318;
   color-scheme: light dark;
 }
@@ -52,13 +53,7 @@ h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
 p { margin: 0 0 12px; }
 .muted { color: var(--muted); }
 
-.grid { display: flex; gap: 5px; margin-bottom: 18px; }
-.grid i {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--accent) calc(var(--l) * 100%), var(--empty));
-}
+.logo { display: block; margin-bottom: 18px; }
 
 label { display: block; font-weight: 500; margin: 14px 0 6px; }
 
@@ -79,7 +74,7 @@ button {
   min-height: 48px;
   margin-top: 20px;
   font: 600 16px Inter, system-ui, sans-serif;
-  color: #FFFFFF;
+  color: var(--button-ink);
   background: var(--button);
   border: 0;
   border-radius: 12px;
