@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Talvii</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <div class="grid" aria-hidden="true">
+      <i style="--l:.3"></i><i style="--l:.78"></i><i style="--l:1"></i><i style="--l:.55"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:.78"></i>
+    </div>
+    <h1>talvii.</h1>
+
+    <!-- Shown while the page works out what kind of link was opened -->
+    <section id="loading"><p class="muted">One moment…</p></section>
+
+    <!-- No link: someone just visited the site -->
+    <section id="home" hidden>
+      <p>A little progress, every day.</p>
+      <p class="muted">Talvii is a habit tracker for iPhone and Android.</p>
+    </section>
+
+    <!-- After tapping the link in the sign-up email -->
+    <section id="confirmed" hidden>
+      <h2>Email confirmed</h2>
+      <p>Your account is ready. Go back to the Talvii app and sign in with your email and password.</p>
+    </section>
+
+    <!-- After tapping the link in a password reset email -->
+    <section id="reset" hidden>
+      <h2>Choose a new password</h2>
+      <form id="reset-form" novalidate>
+        <label for="pw">New password</label>
+        <input id="pw" type="password" autocomplete="new-password" minlength="6" required>
+        <label for="pw2">Type it again</label>
+        <input id="pw2" type="password" autocomplete="new-password" minlength="6" required>
+        <p id="reset-error" class="error" role="alert" hidden></p>
+        <button id="reset-btn" type="submit">Save new password</button>
+      </form>
+    </section>
+
+    <section id="reset-done" hidden>
+      <h2>Password updated</h2>
+      <p>Go back to the Talvii app and sign in with your new password.</p>
+    </section>
+
+    <!-- Expired, already used, or otherwise broken links -->
+    <section id="failed" hidden>
+      <h2>This link didn't work</h2>
+      <p id="failed-detail">It may have expired or already been used.</p>
+      <p class="muted">Open the Talvii app and try again: sign up again, or tap “Forgot password?” for a new reset email.</p>
+    </section>
+
+    <footer><a href="privacy.html">Privacy policy</a></footer>
+  </main>
+
+  <script src="supabase-2.118.0.js"></script>
+  <script>
+    // Public values: the publishable key is designed to be shipped in apps and web pages.
+    // Row-level security on every table keeps each user's data private.
+    var SUPABASE_URL = 'https://yqqkyqumeqbzkczriomc.supabase.co';
+    var SUPABASE_KEY = 'sb_publishable_nHP019N9gh75V-vY75tE8w_TMZljiXD';
+
+    function show(id) {
+      document.querySelectorAll('main > section').forEach(function (s) { s.hidden = s.id !== id; });
+    }
+
+    // Supabase puts the result of an email link in the URL fragment (after #).
+    var params = new URLSearchParams(location.hash.slice(1));
+    var query = new URLSearchParams(location.search);
+    var type = params.get('type');
+    var error = params.get('error_description') || query.get('error_description') || params.get('error') || query.get('error');
+
+    // Don't leave sign-in tokens sitting in the address bar or browser history.
+    // (The Supabase client reads the fragment itself before we clear it, below.)
+    function clearUrl() {
+      history.replaceState(null, '', location.pathname);
+    }
+
+    // A new email link opened in a tab that already shows this page only changes the fragment,
+    // which doesn't reload the page. Reload so the new link is handled from scratch.
+    // (Only for a real link: the Supabase client clears the fragment itself after reading it.)
+    window.addEventListener('hashchange', function () {
+      if (/(^|[#&])(access_token|error)=/.test(location.hash)) location.reload();
+    });
+
+    if (error) {
+      document.getElementById('failed-detail').textContent = error.replace(/\+/g, ' ') + '.';
+      clearUrl();
+      show('failed');
+    } else if (type === 'recovery') {
+      startReset();
+    } else if (type === 'signup' || type === 'email_change' || type === 'invite' || type === 'magiclink') {
+      clearUrl();
+      show('confirmed');
+    } else {
+      show('home');
+    }
+
+    function startReset() {
+      var client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: false, autoRefreshToken: false },
+      });
+
+      client.auth.getSession().then(function (res) {
+        clearUrl();
+        if (res.error || !res.data.session) {
+          show('failed');
+          return;
+        }
+        show('reset');
+        document.getElementById('pw').focus();
+      });
+
+      var form = document.getElementById('reset-form');
+      var errorEl = document.getElementById('reset-error');
+      var btn = document.getElementById('reset-btn');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var pw = document.getElementById('pw').value;
+        var pw2 = document.getElementById('pw2').value;
+        errorEl.hidden = true;
+        if (pw.length < 6) return fail('Use at least 6 characters.');
+        if (pw !== pw2) return fail("The two passwords don't match.");
+
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+        client.auth.updateUser({ password: pw }).then(function (res) {
+          if (res.error) {
+            btn.disabled = false;
+            btn.textContent = 'Save new password';
+            return fail(res.error.message);
+          }
+          // Only end the session in this browser; the app signs in again with the new password.
+          client.auth.signOut({ scope: 'local' });
+          show('reset-done');
+        });
+      });
+
+      function fail(msg) {
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+      }
+    }
+  </script>
+</body>
+</html>
