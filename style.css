@@ -6,8 +6,8 @@
   --muted: #5C6370;
   --empty: #E7E5DF;
   --accent: #8B6CF0; /* focus rings */
-  --button: #A78BFA; /* Talvii lavender, with dark text (about 8:1 contrast) */
-  --button-ink: #15121C;
+  --button: #8B6CF0; /* Talvii violet (the app's default colour), with dark text (about 4.9:1) */
+  --button-ink: #12141A;
   --error: #B42318;
   color-scheme: light dark;
 }
