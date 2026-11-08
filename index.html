@@ -37,9 +37,9 @@
       <h2>Choose a new password</h2>
       <form id="reset-form" novalidate>
         <label for="pw">New password</label>
-        <input id="pw" type="password" autocomplete="new-password" minlength="6" required>
+        <input id="pw" type="password" autocomplete="new-password" minlength="8" required>
         <label for="pw2">Type it again</label>
-        <input id="pw2" type="password" autocomplete="new-password" minlength="6" required>
+        <input id="pw2" type="password" autocomplete="new-password" minlength="8" required>
         <p id="reset-error" class="error" role="alert" hidden></p>
         <button id="reset-btn" type="submit">Save new password</button>
       </form>
@@ -127,7 +127,7 @@
         var pw = document.getElementById('pw').value;
         var pw2 = document.getElementById('pw2').value;
         errorEl.hidden = true;
-        if (pw.length < 6) return fail('Use at least 6 characters.');
+        if (pw.length < 8) return fail('Use at least 8 characters.');
         if (pw !== pw2) return fail("The two passwords don't match.");
 
         btn.disabled = true;
