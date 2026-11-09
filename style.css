@@ -54,6 +54,7 @@ p { margin: 0 0 12px; }
 .muted { color: var(--muted); }
 
 .logo { display: block; margin-bottom: 18px; }
+.logo img { display: block; }
 
 label { display: block; font-weight: 500; margin: 14px 0 6px; }
 

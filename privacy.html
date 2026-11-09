@@ -7,16 +7,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="icon" type="image/svg+xml" href="logo-light.svg" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/svg+xml" href="logo-dark.svg" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta name="theme-color" content="#A78BFA">
+  <meta name="theme-color" content="#F6F5F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E1013" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- DRAFT: review before release. support@talvii.co.uk forwards to the owner's inbox once set up at 123-reg. -->
   <main class="card doc">
-    <a href="./"><img class="logo" src="logo.svg" width="48" height="48" alt="Talvii home"></a>
+    <a href="./"><picture class="logo"><source srcset="logo-dark.svg" media="(prefers-color-scheme: dark)"><img src="logo-light.svg" width="48" height="48" alt="Talvii home"></picture></a>
     <h1>Privacy Policy</h1>
     <p class="muted">Last updated: 8 November 2026</p>
 
