@@ -28,6 +28,17 @@
     <section id="home" hidden>
       <p><strong>Build habits without the guilt.</strong><br>One square at a time.</p>
       <p class="muted">Talvii is a habit tracker for iPhone, iPad and Android. Take a break when life happens, fix a missed day, and watch your progress fill in.</p>
+
+      <form id="waitlist-form" novalidate>
+        <label for="wl-email">Coming soon. Get an email when it's out:</label>
+        <input id="wl-email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="254" required>
+        <!-- Left empty by people; bots that fill every field are ignored. -->
+        <div class="hp" aria-hidden="true"><label for="wl-website">Website</label><input id="wl-website" type="text" tabindex="-1" autocomplete="off"></div>
+        <p id="wl-error" class="error" role="alert" hidden></p>
+        <button id="wl-btn" type="submit">Notify me</button>
+        <p class="muted small">One email when Talvii launches, nothing else. See the <a href="privacy.html#waitlist">privacy policy</a>.</p>
+      </form>
+      <p id="wl-done" role="status" hidden><strong>You're on the list.</strong> We'll email you when Talvii is out.</p>
     </section>
 
     <!-- After tapping the link in the sign-up email -->
@@ -94,6 +105,46 @@
     window.addEventListener('hashchange', function () {
       if (/(^|[#&])(access_token|error)=/.test(location.hash)) location.reload();
     });
+
+    // Waitlist: anyone can add an email; the list can't be read back through the API.
+    (function () {
+      var form = document.getElementById('waitlist-form');
+      var input = document.getElementById('wl-email');
+      var btn = document.getElementById('wl-btn');
+      var errorEl = document.getElementById('wl-error');
+      var done = document.getElementById('wl-done');
+      var client = null;
+
+      function finish() {
+        form.hidden = true;
+        done.hidden = false;
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        errorEl.hidden = true;
+        if (document.getElementById('wl-website').value) return finish(); // a bot
+        var email = input.value.trim();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 254) {
+          errorEl.textContent = 'Please check your email address.';
+          errorEl.hidden = false;
+          input.focus();
+          return;
+        }
+        btn.disabled = true;
+        btn.textContent = 'Adding you…';
+        client = client || supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
+        var source = new URLSearchParams(location.search).get('ref') || 'website';
+        client.from('waitlist').insert({ email: email, source: source.slice(0, 40) }).then(function (res) {
+          // Already on the list counts as success.
+          if (!res.error || res.error.code === '23505') return finish();
+          btn.disabled = false;
+          btn.textContent = 'Notify me';
+          errorEl.textContent = "That didn't work. Please try again in a moment.";
+          errorEl.hidden = false;
+        });
+      });
+    })();
 
     if (error) {
       document.getElementById('failed-detail').textContent = error.replace(/\+/g, ' ') + '.';

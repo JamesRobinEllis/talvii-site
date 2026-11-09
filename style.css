@@ -84,6 +84,11 @@ button {
 button:disabled { opacity: .6; cursor: default; }
 
 .error { color: var(--error); margin: 12px 0 0; }
+.small { font-size: 14px; margin-top: 12px; }
+#waitlist-form { margin-top: 20px; }
+#wl-done { margin-top: 20px; }
+/* Hidden field that only bots fill in. */
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 14px; }
 a { color: inherit; }
