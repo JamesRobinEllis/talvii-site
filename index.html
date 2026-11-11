@@ -144,21 +144,40 @@
       var REACH = 32; // px past each edge, as --reach in style.css
       function set() { phones.style.setProperty('--s', String(input.value / 100)); }
       input.addEventListener('input', set);
-      // Drag (or tap) anywhere on the screenshots; the divider follows the pointer exactly.
-      var dragging = false;
-      function follow(e) {
+      function follow(x) {
         var box = phones.getBoundingClientRect();
-        input.value = Math.max(0, Math.min(100, Math.round((e.clientX - box.left + REACH) / (box.width + 2 * REACH) * 100)));
+        input.value = Math.max(0, Math.min(100, Math.round((x - box.left + REACH) / (box.width + 2 * REACH) * 100)));
         set();
       }
+      // Mouse and pen: drag (or click) anywhere on the screenshots.
+      var dragging = false;
       phones.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'touch') return; // touch is handled below
         dragging = true;
         phones.setPointerCapture(e.pointerId);
-        follow(e);
+        follow(e.clientX);
         e.preventDefault();
       });
-      phones.addEventListener('pointermove', function (e) { if (dragging) follow(e); });
+      phones.addEventListener('pointermove', function (e) { if (dragging) follow(e.clientX); });
       ['pointerup', 'pointercancel'].forEach(function (t) { phones.addEventListener(t, function () { dragging = false; }); });
+      // Touch (iPhone Safari decides on scrolling before pointer events help): a sideways swipe
+      // moves the divider, an up-and-down swipe scrolls the page, a tap moves it to that spot.
+      var start = null, mode = null;
+      phones.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1) { start = null; return; }
+        start = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        mode = null;
+      }, { passive: true });
+      phones.addEventListener('touchmove', function (e) {
+        if (!start) return;
+        var t = e.touches[0], dx = t.clientX - start.x, dy = t.clientY - start.y;
+        if (!mode && Math.abs(dx) + Math.abs(dy) > 6) mode = Math.abs(dx) > Math.abs(dy) ? 'slide' : 'scroll';
+        if (mode === 'slide') { e.preventDefault(); follow(t.clientX); }
+      }, { passive: false });
+      phones.addEventListener('touchend', function (e) {
+        if (start && !mode) follow(start.x); // a tap
+        start = null; mode = null;
+      });
       set();
     })();
 
