@@ -82,7 +82,7 @@
   <!-- Home only: the app itself, and what it does. -->
   <!-- Home only: the app itself, light on the left of the divider and dark on the right. -->
   <div class="compare home-only" hidden>
-    <div class="phones" style="--split: 50%">
+    <div class="phones" style="--s: .5">
       <div class="phones-layer light">
         <figure class="phone phone-back"><img src="shot-habit.webp" width="480" height="1039" alt="A habit's page in Talvii: this week's ticks and three months of history as a grid"></figure>
         <figure class="phone phone-front"><img src="shot-today.webp" width="480" height="1039" alt="Talvii's Today screen: this week's score, the history grid and today's habits"></figure>
@@ -141,13 +141,14 @@
       var phones = document.querySelector('.phones');
       var input = document.querySelector('.split');
       if (!phones || !input) return;
-      function set() { phones.style.setProperty('--split', input.value + '%'); }
+      var REACH = 32; // px past each edge, as --reach in style.css
+      function set() { phones.style.setProperty('--s', String(input.value / 100)); }
       input.addEventListener('input', set);
       // Drag (or tap) anywhere on the screenshots; the divider follows the pointer exactly.
       var dragging = false;
       function follow(e) {
         var box = phones.getBoundingClientRect();
-        input.value = Math.max(0, Math.min(100, Math.round((e.clientX - box.left) / box.width * 100)));
+        input.value = Math.max(0, Math.min(100, Math.round((e.clientX - box.left + REACH) / (box.width + 2 * REACH) * 100)));
         set();
       }
       phones.addEventListener('pointerdown', function (e) {

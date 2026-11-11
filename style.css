@@ -123,10 +123,11 @@ body.home .page { max-width: 1040px; margin: 0 auto; gap: 40px; }
 body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
 
 .compare { position: relative; z-index: 1; width: 100%; }
-.phones { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; --split: 50%; }
+.phones { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; --s: .5; --reach: 32px; }
+/* The divider travels a little past both edges, so the tilted phones' corners change too. */
 .phones-layer { display: flex; justify-content: center; align-items: flex-start; gap: 16px; padding: 8px 0 24px; }
 /* The dark copy sits exactly on top and only shows right of the divider. */
-.phones-layer.dark { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--split)); }
+.phones-layer.dark { position: absolute; inset: 0; clip-path: inset(calc(-1 * var(--reach)) calc(-1 * var(--reach)) calc(-1 * var(--reach)) calc(var(--s) * (100% + 2 * var(--reach)) - var(--reach))); }
 .phones-layer.dark .phone { background: #000; }
 .phone {
   margin: 0;
@@ -139,7 +140,7 @@ body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
 .phone img { display: block; width: 100%; height: auto; border-radius: 28px; }
 .phone-back { margin-top: 40px; }
 
-.divider { position: absolute; top: 0; bottom: 0; left: var(--split); width: 2px; margin-left: -1px; background: var(--accent); pointer-events: none; }
+.divider { position: absolute; top: 0; bottom: 0; left: calc(var(--s) * (100% + 2 * var(--reach)) - var(--reach)); width: 2px; margin-left: -1px; background: var(--accent); pointer-events: none; }
 .knob {
   position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px;
   border-radius: 50%; background: var(--accent); box-shadow: 0 4px 16px rgba(20, 16, 40, .3);
