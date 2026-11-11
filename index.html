@@ -4,7 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>Talvii</title>
+  <title>Talvii · Habit tracker: build habits without the guilt</title>
+  <meta name="description" content="A habit tracker for iPhone, iPad and Android. Build habits without the guilt: take a break when life happens, fix a missed day, and watch your progress fill in.">
+  <link rel="canonical" href="https://talvii.co.uk/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Talvii">
+  <meta property="og:title" content="Talvii · Habit tracker: build habits without the guilt">
+  <meta property="og:description" content="A habit tracker for iPhone, iPad and Android. Build habits without the guilt: take a break when life happens, fix a missed day, and watch your progress fill in.">
+  <meta property="og:url" content="https://talvii.co.uk/">
+  <meta property="og:image" content="https://talvii.co.uk/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Talvii: build habits without the guilt. One square at a time.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
@@ -26,7 +38,7 @@
     <h1>talvii.</h1>
 
     <!-- Shown while the page works out what kind of link was opened -->
-    <section id="loading"><p class="muted">One moment…</p></section>
+    <section data-nosnippet id="loading"><p class="muted">One moment…</p></section>
 
     <!-- No link: someone just visited the site -->
     <section id="home" hidden>
@@ -46,14 +58,14 @@
     </section>
 
     <!-- After tapping the link in the sign-up email -->
-    <section id="confirmed" hidden>
+    <section data-nosnippet id="confirmed" hidden>
       <h2>Email confirmed</h2>
       <p>Your account is ready. Go back to the Talvii app and you'll be signed in automatically.</p>
       <p class="muted">Closed the app? Open Talvii and sign in with your email and password.</p>
     </section>
 
     <!-- After tapping the link in a password reset email -->
-    <section id="reset" hidden>
+    <section data-nosnippet id="reset" hidden>
       <h2>Choose a new password</h2>
       <form id="reset-form" novalidate>
         <label for="pw">New password</label>
@@ -65,13 +77,13 @@
       </form>
     </section>
 
-    <section id="reset-done" hidden>
+    <section data-nosnippet id="reset-done" hidden>
       <h2>Password updated</h2>
       <p>Go back to the Talvii app and sign in with your new password.</p>
     </section>
 
     <!-- Expired, already used, or otherwise broken links -->
-    <section id="failed" hidden>
+    <section data-nosnippet id="failed" hidden>
       <h2>This link didn't work</h2>
       <p id="failed-detail">It may have expired or already been used.</p>
       <p class="muted">Open the Talvii app and try again: sign up again, or tap “Forgot password?” for a new reset email.</p>
