@@ -142,8 +142,21 @@
       var input = document.querySelector('.split');
       if (!phones || !input) return;
       var REACH = 32; // px past each edge, as --reach in style.css
-      function set() { phones.style.setProperty('--s', String(input.value / 100)); }
+      var dark = phones.querySelector('.phones-layer.dark');
+      var line = phones.querySelector('.divider');
+      // Positions are set directly in pixels: Safari doesn't always redraw a clip-path that
+      // depends on a CSS variable when the variable changes.
+      function set() {
+        var s = input.value / 100;
+        phones.style.setProperty('--s', String(s));
+        var x = s * (phones.offsetWidth + 2 * REACH) - REACH;
+        var clip = 'inset(-' + REACH + 'px -' + REACH + 'px -' + REACH + 'px ' + x + 'px)';
+        dark.style.webkitClipPath = clip;
+        dark.style.clipPath = clip;
+        line.style.left = x + 'px';
+      }
       input.addEventListener('input', set);
+      window.addEventListener('resize', set);
       function follow(x) {
         var box = phones.getBoundingClientRect();
         input.value = Math.max(0, Math.min(100, Math.round((x - box.left + REACH) / (box.width + 2 * REACH) * 100)));
