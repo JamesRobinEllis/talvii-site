@@ -106,6 +106,8 @@
         <figure class="phone phone-back"><img src="shot-habit-dark.webp" width="480" height="1039" alt="" loading="lazy"></figure>
         <figure class="phone phone-front"><img src="shot-today-dark.webp" width="480" height="1039" alt="" loading="lazy"></figure>
       </div>
+      <!-- Catches drags and taps across the phones and the strip past each edge, where the handle can sit. -->
+      <div class="hit" aria-hidden="true"></div>
       <div class="divider" aria-hidden="true"><span class="knob"><svg viewBox="0 0 24 24"><path d="m9 6-6 6 6 6M15 6l6 6-6 6" /></svg></span></div>
       <input class="split" type="range" min="0" max="100" value="50" aria-label="Compare light and dark mode: move left for more dark, right for more light">
     </div>
@@ -156,7 +158,8 @@
       var phones = document.querySelector('.phones');
       var input = document.querySelector('.split');
       if (!phones || !input) return;
-      var REACH = 32; // px past each edge, as --reach in style.css
+      // How far past each edge the divider goes (--reach in style.css: 32px on wide screens, where the phones tilt).
+      function reach() { return parseFloat(getComputedStyle(phones).getPropertyValue('--reach')) || 0; }
       var dark = phones.querySelector('.phones-layer.dark');
       var line = phones.querySelector('.divider');
       // Positions are set directly in pixels: Safari doesn't always redraw a clip-path that
@@ -164,8 +167,8 @@
       function set() {
         var s = input.value / 100;
         phones.style.setProperty('--s', String(s));
-        var x = s * (phones.offsetWidth + 2 * REACH) - REACH;
-        var clip = 'inset(-' + REACH + 'px -' + REACH + 'px -' + REACH + 'px ' + x + 'px)';
+        var R = reach(), x = s * (phones.offsetWidth + 2 * R) - R;
+        var clip = 'inset(-' + R + 'px -' + R + 'px -' + R + 'px ' + x + 'px)';
         dark.style.webkitClipPath = clip;
         dark.style.clipPath = clip;
         line.style.left = x + 'px';
@@ -174,7 +177,8 @@
       window.addEventListener('resize', set);
       function follow(x) {
         var box = phones.getBoundingClientRect();
-        input.value = Math.max(0, Math.min(100, Math.round((x - box.left + REACH) / (box.width + 2 * REACH) * 100)));
+        var R = reach();
+        input.value = Math.max(0, Math.min(100, Math.round((x - box.left + R) / (box.width + 2 * R) * 100)));
         set();
       }
       // Mouse and pen: drag (or click) anywhere on the screenshots.

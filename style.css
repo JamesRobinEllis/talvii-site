@@ -123,7 +123,9 @@ body.home .page { max-width: 1040px; margin: 0 auto; gap: 40px; }
 body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
 
 .compare { position: relative; z-index: 1; width: 100%; }
-.phones { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; --s: .5; --reach: 32px; }
+/* The grab area past the phones never makes the page scroll sideways. */
+body.home { overflow-x: clip; }
+.phones { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; --s: .5; --reach: 0px; }
 /* The divider travels a little past both edges, so the tilted phones' corners change too. */
 .phones-layer { display: flex; justify-content: center; align-items: flex-start; gap: 16px; padding: 8px 0 24px; }
 /* The dark copy sits exactly on top and only shows right of the divider. */
@@ -131,7 +133,7 @@ body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
 .phones-layer.dark .phone { background: #000; }
 .phone {
   margin: 0;
-  width: min(42vw, 230px);
+  width: min(40vw, 230px);
   border-radius: 34px;
   padding: 7px;
   background: #1A1D21;
@@ -140,6 +142,7 @@ body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
 .phone img { display: block; width: 100%; height: auto; border-radius: 28px; }
 .phone-back { margin-top: 40px; }
 
+.phones .hit { position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--reach) - 24px); right: calc(-1 * var(--reach) - 24px); z-index: 1; } /* 24px: half the round handle */
 .divider { position: absolute; top: 0; bottom: 0; left: calc(var(--s) * (100% + 2 * var(--reach)) - var(--reach)); width: 2px; margin-left: -1px; background: var(--accent); pointer-events: none; }
 .knob {
   position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px;
@@ -174,6 +177,7 @@ body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
   body.home .page { display: grid; grid-template-columns: 420px 1fr; align-items: center; column-gap: 56px; row-gap: 56px; }
   body.home .card { justify-self: end; }
   .phone { width: 240px; }
+  .phones { --reach: 32px; }
   .phone-front { transform: rotate(3deg); }
   .phone-back { transform: rotate(-4deg); margin-top: 56px; margin-right: -40px; }
   .features { grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); }
