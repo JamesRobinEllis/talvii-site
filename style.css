@@ -1,5 +1,5 @@
 :root {
-  --bg: #F6F5F2;
+  --bg: #EAE8F0; /* lavender-grey, so white cards stand out */
   --card: #FFFFFF;
   --border: #E6E3DC;
   --edge: #CFC9DE; /* outline of cards that sit on the home page's grid */
@@ -139,7 +139,7 @@ a { color: inherit; }
   z-index: 0;
   display: none;
   pointer-events: none;
-  opacity: .4;
+  opacity: .26;
   /* fades out towards the middle, so the form and phones stay calm */
   -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 40%, rgba(0,0,0,.6) 75%, #000 100%);
   mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 40%, rgba(0,0,0,.6) 75%, #000 100%);

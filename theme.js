@@ -14,7 +14,7 @@
   }
   // The browser's address bar colour follows the page.
   function themeColor() {
-    var bg = current() === 'dark' ? '#0E1013' : '#F6F5F2';
+    var bg = current() === 'dark' ? '#0E1013' : '#EAE8F0';
     var metas = document.querySelectorAll('meta[name="theme-color"]');
     for (var i = 0; i < metas.length; i++) { metas[i].setAttribute('content', bg); metas[i].removeAttribute('media'); }
   }
