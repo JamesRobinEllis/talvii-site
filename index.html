@@ -167,11 +167,14 @@
       function set() {
         var s = input.value / 100;
         phones.style.setProperty('--s', String(s));
-        var R = reach(), x = s * (phones.offsetWidth + 2 * R) - R;
-        var clip = 'inset(-' + R + 'px -' + R + 'px -' + R + 'px ' + x + 'px)';
+        // Relative to the screenshots' width (not measured in pixels), so the position is right even
+        // when this runs before they're shown. Set on the elements themselves: Safari doesn't
+        // always redraw a clip-path that only changes through a CSS variable.
+        var R = reach(), x = 'calc(' + s + ' * (100% + ' + 2 * R + 'px) - ' + R + 'px)';
+        var clip = 'inset(-' + R + 'px -' + R + 'px -' + R + 'px ' + x + ')';
         dark.style.webkitClipPath = clip;
         dark.style.clipPath = clip;
-        line.style.left = x + 'px';
+        line.style.left = x;
       }
       input.addEventListener('input', set);
       window.addEventListener('resize', set);
