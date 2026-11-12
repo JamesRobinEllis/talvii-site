@@ -28,6 +28,7 @@
   <meta name="theme-color" content="#F6F5F2" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0E1013" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="style.css">
+  <script src="theme.js"></script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Talvii", "url": "https://talvii.co.uk/", "logo": "https://talvii.co.uk/logo.png", "email": "support@talvii.co.uk", "sameAs": ["https://www.tiktok.com/@talvii_habittracker", "https://www.instagram.com/talvii_habittracker/", "https://www.youtube.com/@talvii_app", "https://x.com/Talvii_app", "https://www.threads.com/@talvii_habittracker"]}</script>
 </head>
 <body>
@@ -35,7 +36,7 @@
   <canvas id="grid-bg" aria-hidden="true"></canvas>
   <div class="page">
   <main class="card">
-    <picture class="logo"><source srcset="logo-dark.svg" media="(prefers-color-scheme: dark)"><img src="logo-light.svg" width="56" height="56" alt=""></picture>
+    <span class="logo"><img class="logo-light" src="logo-light.svg" width="56" height="56" alt=""><img class="logo-dark" src="logo-dark.svg" width="56" height="56" alt=""></span>
     <h1>talvii.</h1>
 
     <!-- Shown while the page works out what kind of link was opened -->
@@ -229,7 +230,7 @@
       var cols = 0, rows = 0, cells = [];
       // empty -> violet at 0, 30, 55, 78 and 100%, as in the app
       function shades() {
-        var dark = darkQuery.matches;
+        var dark = window.talviiTheme ? window.talviiTheme.current() === 'dark' : darkQuery.matches;
         var e = dark ? [39, 43, 51] : [231, 229, 223], a = [139, 108, 240];
         return [0, .3, .55, .78, 1].map(function (t) {
           return 'rgb(' + e.map(function (v, i) { return Math.round(v + (a[i] - v) * t); }).join(',') + ')';
@@ -261,7 +262,8 @@
       }
       resize();
       window.addEventListener('resize', resize);
-      darkQuery.addEventListener && darkQuery.addEventListener('change', function () { colours = shades(); resize(); });
+      // Recolour when the light/dark switch is used (or the device changes, while no choice is saved).
+      document.addEventListener('talvii-theme', function () { colours = shades(); resize(); });
       if (still) return;
       setInterval(function () {
         if (document.hidden) return;
