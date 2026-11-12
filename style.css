@@ -2,6 +2,8 @@
   --bg: #F6F5F2;
   --card: #FFFFFF;
   --border: #E6E3DC;
+  --edge: #CFC9DE; /* outline of cards that sit on the home page's grid */
+  --lift: 0 2px 4px rgba(20, 16, 40, .06), 0 8px 24px rgba(20, 16, 40, .08);
   --text: #1A1D21;
   --muted: #5C6370;
   --empty: #E7E5DF;
@@ -19,6 +21,8 @@
     --bg: #0E1013;
     --card: #171A1F;
     --border: #262A31;
+    --edge: #262A31;
+    --lift: none;
     --text: #F1F2F4;
     --muted: #9BA2AE;
     --empty: #272B33;
@@ -30,6 +34,8 @@
   --bg: #0E1013;
   --card: #171A1F;
   --border: #262A31;
+  --edge: #262A31;
+  --lift: none;
   --text: #F1F2F4;
   --muted: #9BA2AE;
   --empty: #272B33;
@@ -142,7 +148,7 @@ body.home #grid-bg { display: block; }
 .page { width: 100%; display: flex; flex-direction: column; align-items: center; }
 body.home { display: block; padding: 48px 16px 40px; }
 body.home .page { max-width: 1040px; margin: 0 auto; gap: 40px; }
-body.home .card { box-shadow: 0 20px 60px rgba(20, 16, 40, .10); }
+body.home .card { border-color: var(--edge); box-shadow: var(--lift), 0 20px 60px rgba(20, 16, 40, .10); }
 
 .compare { position: relative; z-index: 1; width: 100%; }
 /* The grab area past the phones never makes the page scroll sideways. */
@@ -185,7 +191,14 @@ body.home { overflow-x: clip; }
   list-style: none; margin: 0; padding: 0; width: 100%;
   display: grid; gap: 12px; grid-template-columns: 1fr;
 }
-.features li { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+.features li {
+  background: var(--card); border: 1px solid var(--edge); border-radius: 14px; padding: 16px 18px;
+  box-shadow: var(--lift); transition: transform .2s ease, box-shadow .2s ease;
+}
+/* A gentle lift on hover (mouse only; nothing moves with Reduce Motion). */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .features li:hover { transform: scale(1.03); box-shadow: var(--lift), 0 12px 32px rgba(20, 16, 40, .14); }
+}
 .features svg { width: 26px; height: 26px; fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 6px; }
 .features h2 { font-size: 17px; margin-bottom: 4px; }
 .features p { margin: 0; color: var(--muted); font-size: 15px; }
